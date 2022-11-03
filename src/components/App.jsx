@@ -6,12 +6,27 @@ import { ContactList } from './ContactList/ContactList';
 import Phonebook from './Phonebook/Phonebook';
 import { Filter } from './Filter/Filter';
 import { P } from './Style/Element.styled';
-
+const LS_KEY = 'contacts';
 export class App extends Component {
   state = {
     contacts: [],
     filter: '',
   };
+
+  componentDidMount() {
+    const savedContacts = JSON.parse(localStorage.getItem(LS_KEY));
+
+    //console.log(savedContacts);
+    if (savedContacts) {
+      //перевірка наявності в ЛС
+      this.setState({ contacts: savedContacts });
+    }
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts.length !== this.state.contacts.length) {
+      localStorage.setItem(LS_KEY, JSON.stringify(this.state.contacts));
+    }
+  }
   reset = () => {
     this.setState({ filter: '' });
   };
